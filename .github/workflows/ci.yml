@@ -1,0 +1,97 @@
+name: CI pipeline team 9
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend-track:
+    name: Backend track
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies for backend
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/pip install -r backend/dev-requirements.txt
+
+      - name: Compile backend
+        run: .venv/bin/python -m compileall backend/app
+
+      - name: Lint backend with Ruff
+        run: .venv/bin/ruff check backend/app
+
+      - name: Run backend tests with coverage
+        working-directory: backend
+        run: |
+          ../.venv/bin/pytest --cov=app --cov-report=xml --cov-report=term-missing
+
+      - name: Upload backend coverage report
+        uses: actions/upload-artifact@v6
+        with:
+          name: backend-coverage
+          path: backend/coverage.xml
+
+      - name: Boot backend and check health
+        working-directory: backend
+        run: |
+          ../.venv/bin/python -m app &
+          APP_PID=$!
+
+          for i in {1..20}; do
+            if curl --fail http://127.0.0.1:8000/health; then
+              kill "$APP_PID" || true
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "Backend did not start in time"
+          kill "$APP_PID" || true
+          exit 1
+
+  frontend-track:
+    name: Frontend track
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "lts/*"
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Typecheck TypeScript
+        working-directory: frontend
+        run: npm run typecheck
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm run test
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
