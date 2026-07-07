@@ -1,6 +1,8 @@
 
 # Echipa 9: Apostu Alina/Petrila Ana-Maria
 
+[![CI pipeline team 9](https://github.com/issa-summer-practice-2026/team-09-cluster/actions/workflows/ci.yml/badge.svg)](https://github.com/issa-summer-practice-2026/team-09-cluster/actions/workflows/ci.yml)
+
 # instrument-cluster
 
 A digital automotive **instrument cluster** — the starter app for the ISSA
