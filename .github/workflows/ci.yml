@@ -34,7 +34,7 @@ jobs:
 
       - name: Boot backend
         run: |
-          .venv/bin/python backend.app &
+          .venv/bin/python -m backend.app &
           sleep 3
           curl --fail http://localhost:8000/health
   
