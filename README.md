@@ -1,8 +1,11 @@
-<<<<<<< HEAD
+
 
 # Echipa 9: Apostu Alina/Petrila Ana-Maria
 
->>>>>>> 1d953ff9642ecd9f76a78b8daf902f0f656eab58
+## Branch protection
+
+Changes to `main` are merged only through a reviewed pull request with passing CI.
+
 # instrument-cluster
 
 A digital automotive **instrument cluster** — the starter app for the ISSA
