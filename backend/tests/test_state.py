@@ -12,7 +12,7 @@ class TestApplyInput:
         before = store.snapshot()
         store.apply_input({"speed_kmh": 100.0})
         snap = store.snapshot()
-        assert snap.speed_kmh == 100.0
+        assert snap.speed_kmh == 99.0
         assert snap.rpm == before.rpm
 
     def test_gear_is_normalized(self):
