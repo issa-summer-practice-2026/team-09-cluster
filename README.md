@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 
 # Echipa 9: Apostu Alina/Petrila Ana-Maria
 
->>>>>>> 1d953ff9642ecd9f76a78b8daf902f0f656eab58
 # instrument-cluster
 
 A digital automotive **instrument cluster** — the starter app for the ISSA
