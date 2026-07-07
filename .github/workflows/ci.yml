@@ -1,4 +1,4 @@
-name : CI pipeline team 9
+name: CI pipeline team 9
 
 on:
   push:
@@ -10,7 +10,9 @@ on:
 
 jobs:
   backend-track:
-    runs-on: ubuntu-latest #sistem de operare pornit de GitHub
+    name: Backend track
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,28 +20,53 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies for backend
-        run: python -m venv .venv && .venv/bin/pip install -r backend/dev-requirements.txt
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/pip install -r backend/dev-requirements.txt
 
-      - name: Compileall part
+      - name: Compile backend
         run: .venv/bin/python -m compileall backend/app
 
-      - name: Lint with Ruff
+      - name: Lint backend with Ruff
         run: .venv/bin/ruff check backend/app
-  
-      - name: Run backend tests
-        run: .venv/bin/pytest --cov backend/tests
 
-      - name: Boot backend
+      - name: Run backend tests with coverage
+        working-directory: backend
         run: |
-          .venv/bin/python -m backend.app &
-          sleep 3
-          curl --fail http://localhost:8000/health
-  
+          ../.venv/bin/pytest --cov=app --cov-report=xml --cov-report=term-missing
+
+      - name: Upload backend coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/coverage.xml
+
+      - name: Boot backend and check health
+        working-directory: backend
+        run: |
+          ../.venv/bin/python -m app &
+          APP_PID=$!
+
+          for i in {1..20}; do
+            if curl --fail http://127.0.0.1:8000/health; then
+              kill "$APP_PID" || true
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "Backend did not start in time"
+          kill "$APP_PID" || true
+          exit 1
+
   frontend-track:
+    name: Frontend track
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,19 +74,24 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
 
-      - name: Install dependencies
-        run: cd frontend && npm ci
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
 
       - name: Lint frontend
-        run: cd frontend && npm run lint
+        working-directory: frontend
+        run: npm run lint
 
       - name: Typecheck TypeScript
-        run: cd frontend && npm run typecheck
+        working-directory: frontend
+        run: npm run typecheck
 
-      - name: Run tests
-        run: cd frontend && npm run test
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm run test
 
       - name: Build frontend
-        run: cd frontend && npm run build
+        working-directory: frontend
+        run: npm run build
