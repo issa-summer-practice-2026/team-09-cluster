@@ -1,3 +1,4 @@
+Echipa 9 : Apostu Alina/Petrila Ana-Maria
 # instrument-cluster
 
 A digital automotive **instrument cluster** — the starter app for the ISSA
@@ -183,8 +184,8 @@ docs/      getting-started · architecture · workflow  +  backlog/ (exercises)
 Both teammates: add your name and GitHub handle here (and set
 `git config user.email` to your GitHub email so your commits count).
 
-- Name — @handle
-- Name — @handle
+- Apostu Alina — alina-apostu
+- Petrila Ana-Maria — AnaMaria-cpu
 
 ## Your DevOps tasks (this is the week) — TODO
 
