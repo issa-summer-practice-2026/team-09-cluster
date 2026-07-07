@@ -1,0 +1,65 @@
+name : CI pipeline team 9
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend-track:
+    runs-on: ubuntu-latest #sistem de operare pornit de GitHub
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies for backend
+        run: python -m venv .venv && .venv/bin/pip install -r backend/dev-requirements.txt
+
+      - name: Compileall part
+        run: .venv/bin/python -m compileall backend/app
+
+      - name: Lint with Ruff
+        run: .venv/bin/ruff check backend/app
+  
+      - name: Run backend tests
+        run: .venv/bin/pytest --cov backend/tests
+
+      - name: Boot backend
+        run: |
+          .venv/bin/python backend/app/main.py &
+          sleep 3
+          curl --fail http://localhost:8000/health
+  
+  frontend-track:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: cd frontend && npm ci
+
+      - name: Lint frontend
+        run: cd frontend && npm run lint
+
+      - name: Typecheck TypeScript
+        run: cd frontend && npm run typecheck
+
+      - name: Run tests
+        run: cd frontend && npm run test
+
+      - name: Build frontend
+        run: cd frontend && npm run build
