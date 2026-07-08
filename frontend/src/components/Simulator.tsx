@@ -16,7 +16,7 @@ const LAMP_TOGGLES: { name: TelltaleName; label: string }[] = [
   // Guided-change warm-ups: the oil and seat-belt lamps already render in the
   // cluster, but their backend keys are removed. After you add the key in the
   // backend (see docs/backlog/ — 01-oil-telltale, 02-seatbelt-telltale),
-  // uncomment the matching line to get a clickable toggle here too.
+  //uncomment the matching line to get a clickable toggle here too.
   { name: "oil", label: "Oil" },
   { name: "seatbelt", label: "Seat belt" },
 ];
