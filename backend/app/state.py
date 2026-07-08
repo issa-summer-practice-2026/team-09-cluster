@@ -39,6 +39,7 @@ _BOOL_FIELDS: frozenset[str] = frozenset(
         "battery",
         "oil",  
         "bulb_out",
+        "seatbelt",
     }
 )
 
