@@ -1,0 +1,31 @@
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  pr-title:
+    name: PR title
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR title follows Conventional Commits
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(feat|fix|docs|test|ci|chore|refactor|perf|build|style)(\([a-z0-9-]+\))?!?: .+'
+
+          echo "PR title: $PR_TITLE"
+
+          if [[ "$PR_TITLE" =~ $pattern ]]; then
+            echo "PR title is valid."
+          else
+            echo "Invalid PR title."
+            echo "Use a Conventional Commit title, for example:"
+            echo "feat: add oil telltale"
+            echo "fix: correct backend health check"
+            echo "docs: update README"
+            echo "ci: add coverage gate"
+            exit 1
+          fi

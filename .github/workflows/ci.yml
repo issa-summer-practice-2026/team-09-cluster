@@ -37,7 +37,7 @@ jobs:
       - name: Run backend tests with coverage
         working-directory: backend
         run: |
-          ../.venv/bin/pytest --cov=app --cov-report=xml --cov-report=term-missing
+          ../.venv/bin/pytest --cov=app --cov-report=xml --cov-report=term-missing --cov-fail-under=80
 
       - name: Upload backend coverage report
         uses: actions/upload-artifact@v6
