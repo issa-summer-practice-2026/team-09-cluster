@@ -98,6 +98,9 @@ class TestTelltales:
         t = compute_telltales(RawInput(high_beam=True, check_engine=True, battery=True))
         assert all(t[k] for k in ("high_beam", "check_engine", "battery"))
 
+    def test_seatbelt_lit_from_toggle(self):
+        assert compute_telltales(RawInput(seatbelt=True))["seatbelt"] is True
+        
     def test_bulb_out_lights_telltale(self):
         assert compute_telltales(RawInput(bulb_out=True))["bulb_out"] is True
         assert compute_telltales(RawInput())["bulb_out"] is False
@@ -105,6 +108,9 @@ class TestTelltales:
     def test_default_is_all_off(self):
         t = compute_telltales(RawInput())
         assert not any(t.values())
+
+    def test_oil_lit_from_toggle(self):
+        assert compute_telltales(RawInput(oil=True))["oil"] is True
 
 
 class TestDeriveState:

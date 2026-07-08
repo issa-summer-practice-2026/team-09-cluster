@@ -35,9 +35,11 @@ TELLTALE_KEYS = (
     "high_beam",
     "check_engine",
     "battery",
+    "oil",
     "coolant",
     "low_fuel",
     "bulb_out",
+    "seatbelt"
 )
 
 
@@ -60,8 +62,11 @@ class RawInput:
     high_beam: bool = False
     check_engine: bool = False
     battery: bool = False
+
+    oil: bool = False
     bulb_out: bool = False  # lights the bulb-failure telltale; also the hyper-flash packet's seam
     odometer_km: float = 12000.0
+    seatbelt: bool = False
 
 
 @dataclass(frozen=True)
@@ -133,9 +138,11 @@ def compute_telltales(inp: RawInput) -> dict[str, bool]:
         "high_beam": inp.high_beam,
         "check_engine": inp.check_engine,
         "battery": inp.battery,
+        "oil": inp.oil,
         "coolant": inp.coolant_temp_c >= OVERHEAT_TEMP_C,
         "low_fuel": inp.fuel_pct <= LOW_FUEL_PCT,
         "bulb_out": inp.bulb_out,
+        "seatbelt": inp.seatbelt,
     }
 
 
@@ -151,8 +158,11 @@ def derive_state(inp: RawInput) -> ClusterState:
         fuel_pct=clamp(inp.fuel_pct, 0.0, FUEL_MAX_PCT),
         fuel_fraction=gauge_fraction(inp.fuel_pct, 0.0, FUEL_MAX_PCT),
         temp_c=clamp(inp.coolant_temp_c, TEMP_MIN_C, TEMP_MAX_C),
-        temp_fraction=gauge_fraction(inp.coolant_temp_c, TEMP_MIN_C, TEMP_MAX_C),
+        temp_fraction=gauge_fraction(
+            inp.coolant_temp_c, TEMP_MIN_C, TEMP_MAX_C),
         gear=gear_display(inp.gear),
         odometer_km=inp.odometer_km,
         telltales=compute_telltales(inp),
     )
+
+
