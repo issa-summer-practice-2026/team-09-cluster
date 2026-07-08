@@ -8,6 +8,7 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 > merged pull requests. Keep this file as the human-readable history.
 
 ## [Unreleased]
+Note from A
 
 ## [0.1.0] - 2026-07-05
 ### Added
