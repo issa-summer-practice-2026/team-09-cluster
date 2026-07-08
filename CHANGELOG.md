@@ -9,6 +9,8 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 - Note from B
+Note from A
+
 ## [0.1.0] - 2026-07-05
 ### Added
 - Initial `instrument-cluster` starter.
