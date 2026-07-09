@@ -95,3 +95,35 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+        
+  container-track:
+    name: Container track
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build Docker image
+        run: docker build -t cluster-ci:test .
+
+      - name: Run pytest inside container
+        run: docker run --rm cluster-ci:test python -m pytest -q
+
+      - name: Boot container and check health
+        run: |
+          docker run -d --name cluster-ci -p 8000:8000 cluster-ci:test
+
+          for i in {1..20}; do
+            if curl --fail http://127.0.0.1:8000/health; then
+              docker logs cluster-ci
+              docker rm -f cluster-ci
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "Container did not become healthy in time"
+          docker logs cluster-ci || true
+          docker rm -f cluster-ci || true
+          exit 1
