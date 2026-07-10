@@ -2,13 +2,6 @@
 
 # Echipa 9: Apostu Alina/Petrila Ana-Maria
 
-## Branch protection
-
-Changes to `main` are merged only through a reviewed pull request with passing CI.
-
-## Test: pr title gate 
-
-# Echipa 9: Apostu Alina/Petrila Ana-Maria
 
 [![CI pipeline team 9](https://github.com/issa-summer-practice-2026/team-09-cluster/actions/workflows/ci.yml/badge.svg)](https://github.com/issa-summer-practice-2026/team-09-cluster/actions/workflows/ci.yml)
 
@@ -97,10 +90,13 @@ backend/  (Flask API + logic)  ◀─────────────┘
 
 ## Prerequisites
 
+- **Git**
 - **Python 3.11+**
 - **Node.js LTS** (bundles npm)
+- **Docker Desktop, for container builds and released images**
 
-## Quick start (recommended)
+
+## Quick start (recommended)- Run locally
 
 Cross-platform helper scripts live in `scripts/dev.py` (with a `Makefile`
 wrapper on Unix):
@@ -117,6 +113,13 @@ To run it the way it will ship (one service, one port):
 
 ```bash
 python scripts/dev.py run      # builds the frontend, then serves everything from Flask on :8000
+```
+Useful endpoints:
+
+```text
+http://localhost:8000/health
+http://localhost:8000/api/state
+http://localhost:8000/version
 ```
 
 On Unix you can use `make setup`, `make dev`, `make run`, `make test`,
@@ -149,6 +152,83 @@ python scripts/dev.py lint    # backend: ruff      | frontend: eslint + tsc
 ```
 
 Backend coverage (used by CI): `cd backend && ../.venv/bin/pytest --cov=app`.
+
+## Run with Docker
+
+Build the Docker image:
+
+```bash
+docker build -t cluster:local .
+```
+
+Run the container:
+```bash
+docker run --rm --name cluster-local -p 8000:8000 cluster:local
+```
+
+Open the app in the browser:
+
+```text
+http://localhost:8000
+```
+
+Check the container endpoints:
+
+```bash
+curl http://localhost:8000/health
+curl http://localhost:8000/api/state
+curl http://localhost:8000/version
+```
+
+Stop the container with `Ctrl + C`, or from another terminal:
+
+```bash
+docker stop cluster-local
+```
+
+To run the backend tests inside the Docker image:
+
+```bash
+docker build -t cluster:test .
+docker run --rm cluster:test python -m pytest -q
+```
+
+## Latest release
+
+The latest release is available on the [GitHub Releases page](../../releases).
+
+Released Docker images are published to GitHub Container Registry.
+
+Replace `<tag>` with the latest release tag, for example `v0.1.23`:
+
+```bash
+docker pull ghcr.io/issa-summer-practice-2026/team-0X-cluster:<tag>
+docker run --rm --name cluster-release -p 8000:8000 ghcr.io/issa-summer-practice-2026/team-0X-cluster:<tag>
+```
+
+Check the running version:
+
+```bash
+curl http://localhost:8000/version
+```
+
+The value returned by `/version` should match the release tag of the image you are running.
+
+## CI and delivery
+
+Every pull request is checked by GitHub Actions:
+
+- **Backend track** — installs backend dependencies, runs Ruff, runs pytest with coverage, compiles Python files, and checks `/health`.
+- **Frontend track** — installs frontend dependencies, runs lint, type-check, tests, and build.
+- **PR title** — checks that the pull request title follows the agreed naming style.
+- **Container track** — builds the Docker image, runs pytest inside the image, boots the container, and checks `/health`.
+
+Changes to `main` go through a reviewed pull request with passing required checks.
+
+On merge to `main`, the release workflow builds and tests a versioned Docker image, pushes it to GHCR, and creates a GitHub Release with generated release notes.
+
+
+
 
 ## HTTP API
 
@@ -199,8 +279,8 @@ docs/      getting-started · architecture · workflow  +  backlog/ (exercises)
 Both teammates: add your name and GitHub handle here (and set
 `git config user.email` to your GitHub email so your commits count).
 
-- Apostu Alina — alina-apostu
-- Petrila Ana-Maria — AnaMaria-cpu
+- Apostu Alina — @alina-apostu
+- Petrila Ana-Maria — @AnaMaria-cpu
 
 ## Your DevOps tasks (this is the week) — TODO
 
