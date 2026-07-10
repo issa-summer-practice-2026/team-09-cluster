@@ -28,7 +28,7 @@ jobs:
           VERSION="1.0.${{ github.run_number }}"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      #hint1:docker/login-action
+      #hint1: docker/login-action
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -36,7 +36,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-    #hint:docker/build push action
+      #hint: docker/build-push-action
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:

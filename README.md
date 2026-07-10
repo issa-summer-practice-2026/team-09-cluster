@@ -12,6 +12,8 @@ Changes to `main` are merged only through a reviewed pull request with passing C
 
 [![CI pipeline team 9](https://github.com/issa-summer-practice-2026/team-09-cluster/actions/workflows/ci.yml/badge.svg)](https://github.com/issa-summer-practice-2026/team-09-cluster/actions/workflows/ci.yml)
 
+![GitHub Release](https://img.shields.io/github/v/release/issa-summer-practice-2026/team-09-cluster)
+
 # instrument-cluster
 
 A digital automotive **instrument cluster** — the starter app for the ISSA
