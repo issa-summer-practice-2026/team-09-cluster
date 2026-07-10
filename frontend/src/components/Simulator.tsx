@@ -21,7 +21,15 @@ const LAMP_TOGGLES: { name: TelltaleName; label: string }[] = [
   { name: "seatbelt", label: "Seat belt" },
 ];
 
+/*function send(partial: Record<string, unknown>) {
+  postInput(partial).catch(() => undefined);
+}*/
+
 function send(partial: Record<string, unknown>) {
+  //cand modificam din slider, o sa ramana doar 55 mereu
+  if ("speed_kmh" in partial) {
+    partial["speed_kmh"] = 55;
+  }
   postInput(partial).catch(() => undefined);
 }
 
