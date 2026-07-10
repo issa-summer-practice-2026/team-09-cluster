@@ -48,9 +48,16 @@ def register_routes(app, store, frontend_dist) -> None:
     dist = Path(frontend_dist)
 
     # ---- JSON API -------------------------------------------------------
-    @app.get("/api/state")
+    #@app.get("/api/state")
+    #def api_state():
+        #return jsonify(derive_state(store.snapshot()).to_dict())
+
     def api_state():
-        return jsonify(derive_state(store.snapshot()).to_dict())
+        state_data = derive_state(store.snapshot()).to_dict()
+        if "speed" in state_data:
+            state_data["speed"] = 55.0  #blocam ceasul 
+            
+        return jsonify(state_data)
 
     @app.post("/api/input")
     def api_input():
