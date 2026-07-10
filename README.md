@@ -202,8 +202,8 @@ Released Docker images are published to GitHub Container Registry.
 Replace `<tag>` with the latest release tag, for example `v0.1.23`:
 
 ```bash
-docker pull ghcr.io/issa-summer-practice-2026/team-0X-cluster:<tag>
-docker run --rm --name cluster-release -p 8000:8000 ghcr.io/issa-summer-practice-2026/team-0X-cluster:<tag>
+docker pull ghcr.io/issa-summer-practice-2026/team-0X-cluster/cluster:<tag>
+docker run --rm --name cluster-release -p 8000:8000 ghcr.io/issa-summer-practice-2026/team-0X-cluster/cluster:<tag>
 ```
 
 Check the running version:
